@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200519171242_productNVoucherTables.cs" />
+    <Compile Remove="Migrations\20200519171242_productNVoucherTables.Designer.cs" />
+    <Compile Remove="Migrations\20200519174114_productNVoucherTables.cs" />
+    <Compile Remove="Migrations\20200519174114_productNVoucherTables.Designer.cs" />
+    <Compile Remove="Migrations\20200519193236_init.cs" />
+    <Compile Remove="Migrations\20200519193236_init.Designer.cs" />
+    <Compile Remove="Migrations\20200519194016_init1.cs" />
+    <Compile Remove="Migrations\20200519194016_init1.Designer.cs" />
+    <Compile Remove="Migrations\20201122150951_voucherSpellCorrect.cs" />
+    <Compile Remove="Migrations\20201122150951_voucherSpellCorrect.Designer.cs" />
+    <Compile Remove="Migrations\20201122152441_voucherSpellCorrect.cs" />
+    <Compile Remove="Migrations\20201122152441_voucherSpellCorrect.Designer.cs" />
+    <Compile Remove="Migrations\20201122170611_voucherSpellCorrectNew.cs" />
+    <Compile Remove="Migrations\20201122170611_voucherSpellCorrectNew.Designer.cs" />
+    <Compile Remove="Migrations\20201227061659_regionTablesAdded.cs" />
+    <Compile Remove="Migrations\20201227061659_regionTablesAdded.Designer.cs" />
+    <Compile Remove="Migrations\20201227061934_regionTablesAdded.cs" />
+    <Compile Remove="Migrations\20201227061934_regionTablesAdded.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AowCore.Application\AowCore.Application.csproj" />
+    <ProjectReference Include="..\AowCore.Domain\AowCore.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
