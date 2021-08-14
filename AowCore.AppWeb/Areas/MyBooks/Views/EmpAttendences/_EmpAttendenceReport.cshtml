@@ -1,0 +1,85 @@
+﻿@model IEnumerable<AowCore.AppWeb.ViewModels.EmpAttendenceViewModel>
+
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            "scrollX": true,
+            "pageLength": 31
+        });
+    });
+</script>
+<h1>Employee Attendence </h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table table-hover responsive" id="reportTable" style="width:100%">
+
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                <label>Day</label>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnrollmentNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OutTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkHourTotal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkMinutes)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @item.Date.ToString("dd-MM-yyyy")
+            </td>
+            <td>
+                @item.Date.DayOfWeek
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OutTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkHourTotal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkMinutes)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+

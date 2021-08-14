@@ -1,0 +1,118 @@
+﻿@model AowCore.AppWeb.ViewModels.AttendenceReportViewModel
+@{
+    ViewData["Title"] = "Report";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(function () {
+        $('#datepickerto').datepicker({
+            //dateFormat: 'dd-mm-yy',
+            autoclose: true
+        });
+
+
+        $("#datepickerfrom").datepicker({
+            //dateFormat: 'dd-mm-yy',
+            autoclose: true
+        });
+    })
+</script>
+<h1>Report</h1>
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <table class="table table-bordered table-striped responsive">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+
+                        <select asp-for="EmpId" class="form-control" asp-items="ViewBag.EmployeeDetails">
+                            <option value="0">Select Employee</option>
+                        </select>
+                    </div>
+
+                </td>
+                <td>
+                    <div class="form-group form-group-sm">
+                        <div>
+                            <select class="form-control dropdown">
+                                <option value="0">Select File Option</option>
+                                <option value="1">Dispatch</option>
+                                <option value="2">Recieve</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input type="text" id="datepickerto" class="form-control" placeholder="To Date">
+                </td>
+                <td>
+                    <input type="text" id="datepickerfrom" class="form-control" placeholder="From Date">
+                </td>
+                <td>
+                    <button class="btn btn-xs btn-success" id="searchbtn">Search</button>
+                    <span>
+                        <img id="loading" style="display: none;" src="~/gif/ajax-loader.gif" />
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</form>
+
+<div id="dailydata">
+
+
+</div>
+
+
+<script>
+    var loading = $("#loading");
+    $(document).on({
+        ajaxStart: function () {
+            loading.show();
+        },
+        ajaxStop: function () {
+            loading.hide();
+        }
+    });
+    $('#searchbtn').on('click', function (e) {
+        var empId = $("#EmpId").val();
+        var todate = $("#datepickerto").val();
+        var fromdate = $("#datepickerfrom").val();
+        $('#loadingmessage').show();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("DisplaySearchResults", "EmpAttendences")",
+            data: { Id: empId, todate: todate, fromdate: fromdate },
+            // dataType: 'json',
+            success: function (data) {
+                console.log('success', data);
+                $("#dailydata").html(data.modelString);
+                $('#loadingmessage').hide();
+            },
+            error: function (exception) {
+                //alert('Exeption:' + exception);
+            }
+        });
+        e.preventDefault();
+    });
+
+    $(document)
+        .ready(function () {
+            $("#btnclear")
+                .click(function () {
+                    $("#ViolationCategories").val("");
+                    $("#Countries").val("");
+                    $("#Users").val("");
+                    $("#datepickerto").val("");
+                    $("#datepickerfrom").val("");
+                });
+
+        });
+    //$.get(action, null, function (data) {
+    //    $('#someDiv').html(data);
+    //}, 'html');
+</script>

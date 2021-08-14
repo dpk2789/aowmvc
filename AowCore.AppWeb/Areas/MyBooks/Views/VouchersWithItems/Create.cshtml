@@ -1,0 +1,172 @@
+﻿@model AowCore.AppWeb.ViewModels.VoucherInvoiceViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#sandbox-container').datepicker({
+            format: "dd-mm-yyyy"
+        });
+
+    });
+</script>
+<h2>
+    @Html.ActionLink("<<Back to List", "Index", new { voucherName = Model.VoucherName, area = "MyBooks" }, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+    Add @Model.VoucherName
+    <span>
+        <img id="loading" style="display: none;" src="~/gif/ajax-loader.gif" />
+    </span>
+</h2>
+<hr />
+
+@using (Html.BeginForm("Create", "VouchersWithItems", FormMethod.Post, new { id = "addPurchaseBill", @autocomplete = "off" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+   
+    <input type="hidden" id="VoucherName" value="@Model.VoucherName" />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            @Html.EditorFor(model => model.LedgerName, new
+               {
+                   htmlAttributes = new
+                   {
+                       @class = "ui-autocomplete-input form-control",
+                       @placeholder = "Enter Party Name",
+                       data_url = @Url.Action("GetLedgersForJournalEntry", "VouchersWithItems")
+                   }
+               })
+            @Html.HiddenFor(c => c.LedgerId)
+            @Html.ValidationMessageFor(model => model.LedgerName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.EditorFor(model => model.VoucherNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Invoice" } })
+            @Html.ValidationMessageFor(model => model.VoucherNumber, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3">
+            <div class='input-group datetimepicker6'>
+                <input type="text" class="form-control" name="Date" id="sandbox-container">
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+            @*@Html.EditorFor(model => model.Date, "EditorDateJqueryDateTimePicker")*@
+        </div>
+
+    </div>
+</div>
+
+
+    <div class="form-row" id="AddItems">
+        <table class="table table-hover table-bordered table-responsive table-striped" style="height:400px">
+            <tr>
+                <td>S.No</td>
+                <td>Item Name</td>
+                <td>Description</td>
+                <td>Amount</td>
+                <td>Quantity</td>
+                <td>Total</td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <input type="text" id="txtStoreItem" class="ui-autocomplete-input form-control" data-url="@Url.Action("GetProductsForAutocomplete", "Products")" placeholder="Enter Product" />
+                    <input type="hidden" id="hdnStoreItemId" class="form-control" />
+                    <input type="hidden" id="hdnProductId" class="form-control" />
+                    <input type="hidden" id="hdnProductAccountId" class="form-control" />
+                    <input type="hidden" id="hdnAccountCategoryName" class="form-control  hdnAccountCategoryName" />
+                    <input type="hidden" id="hdnItemType" class="form-control  hdnItemType" />
+                </td>
+                <td>
+                    <input type="text" id="txtDescription" class="form-control" placeholder="Description" />
+
+                </td>
+                <td>
+                    <input type="text" id="txtMRP" class="form-control" maxlength="7" placeholder="MRP" />
+                </td>
+                <td>
+                    <input type="text" id="txtQuantity" class="form-control" onchange="recalculateExtendedPrice()" placeholder="Quantity" />
+                </td>
+                <td>
+                    <input type="text" id="txtAmount" class="form-control  txtAmount" placeholder="Amount" value="0" />
+                    <input type="hidden" id="hdnAmount" class="form-control  hdnAmount" />
+                </td>
+                <td>
+                    <input id="btnAdd" type="button" value="Add" class="btn btn-primary btn-sm btnadd" />
+                    @*<a href="#" class="glyphicon glyphicon-pencil btnadd" id="btnadd" title="Add"></a>*@
+                    <a href="#" class="glyphicon glyphicon-edit btnupdate" id="btnupdate" title="Edit" style="display:none;"></a>
+                    <a href="#" class="glyphicon glyphicon-erase btnnew" id="btnnew" title="New" style="display:none;"></a>
+                </td>
+            </tr>
+            <tbody id="tbodyitems" class="tbodyitems bordered"></tbody>
+        </table>
+        <input type="hidden" class="hdnProductsTotal" id="hdnProductsTotal" />
+
+    </div>
+
+    <div class="form-row" id="AddSundryAccount">
+        <div class="col-md-5">
+            @Html.TextAreaFor(model => model.Note, new { id = "editor1", @class = "form-control", @placeholder = "Enter Note" })
+            @*@Html.TextAreaFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Note" } })*@
+            @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-7">
+            <table class="table table-bordered table-hover table-condensed  table-sm table-responsive table-striped" style="height:250px">
+                <tr>
+                    <td>Account</td>
+                    <td>%</td>
+                    <td>Amount</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" id="txtSundryItem" class="ui-autocomplete-input form-control" data-url="@Url.Action("GetSundryItemForAutocomplete", "Purchase")" placeholder="Tax/Freight/Discount Account" />
+                        <input type="hidden" id="hdnSundryAccountId" class="form-control" />
+                        <input type="hidden" id="hdnSundryProductId" class="form-control" />
+                        <input type="hidden" id="hdnSundryAccountCategoryName" class="form-control  hdnAccountCategoryName" />
+                        <input type="hidden" id="hdnSundryItemType" class="form-control  hdnItemType" />
+                    </td>
+                    <td>
+                        <input type="text" id="txtPercent" class="form-control  txtPercent" maxlength="7" placeholder="Debit Amount" value="0" />
+                    </td>
+                    <td>
+                        <input type="text" id="txtDebit" class="form-control  txtDebit" maxlength="7" placeholder="Amount" value="0" />
+                        <input type="hidden" id="hdnDebitAmount" class="form-control  hdnAmount" />
+                    </td>
+                    <td>
+                        <input id="btnaccountadd" type="button" value="Add" class="btn btn-primary btn-sm btnaccountadd" />
+                        @*<a class="glyphicon glyphicon-plus btnaccountadd" id="btnaccountadd" title="Add"></a>*@
+                        <a class="fa fa-edit btnaccountupdate" id="btnaccountupdate" title="Edit" style="display:none;"></a>
+                        <a class="fa fa-erase btnaccountnew" id="btnaccountnew" title="New" style="display:none;"></a>
+                    </td>
+                </tr>
+                <tbody id="tbodysundryitems" class="tbodysundryitems bordered"></tbody>
+            </table>
+            <input type="hidden" class="hdnSundryTotal" id="hdnSundryTotal" />
+        </div>
+
+        <div class="form-group col-md-3 offset-9">
+            @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @placeholder = "Total" } })
+            @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-3 offset-9">
+
+            <input type="submit" value="Save & Close" id="SaveClose" class="btn btn-primary SaveOrder" />
+            <input type="submit" value="Save & Next" id="SaveNext" class="btn btn-success SaveOrder" />
+        </div>
+    </div>
+
+    <br />
+}
+
+
+@section Scripts {
+    <script src="~/myscript/purchaseBill/createAddUpdateDeleteItem.js"></script>
+    <script src="~/myscript/purchaseBill/addupdatedeteteSundry.js"></script>
+    <script src="~/myscript/purchaseBill/saveandCommonFunctions.js"></script>
+}

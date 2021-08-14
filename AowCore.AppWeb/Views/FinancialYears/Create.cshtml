@@ -1,0 +1,74 @@
+﻿@model AowCore.AppWeb.ViewModels.FinancialYearViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        $('.StartDate').datetimepicker({
+            format: 'YYYY/MM/DD',
+        });
+    });
+    $(function () {
+        $('.EndDate').datetimepicker({
+            format: 'YYYY/MM/DD',
+        });
+    });
+
+</script>
+
+<h1>
+    @Html.ActionLink("<<Back to List", "Edit", "Companies", new { id = @Model.CompanyId }, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+    Add FinancialYear
+</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(model => model.CompanyId)
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Start" class="control-label"></label>
+                <input name="Start" class="form-control StartDate" placeholder="Start Date" />
+                <span asp-validation-for="Start" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="End" class="control-label"></label>
+                <input name="End" class="form-control EndDate" placeholder="End Date" />
+                <span asp-validation-for="End" class="text-danger"></span>
+            </div>
+
+            @*<div class="form-group  form-check">
+                    <label asp-for="IsLocked" class="form-check-label">
+                        <input asp-for="IsLocked" class="form-check-input" />@Html.DisplayNameFor(model => model.IsLocked)
+                    </label>
+
+                </div>
+                <div class="form-group form-check">
+                        <label asp-for="IsActive" class="form-check-label">
+                            <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                        </label>
+                    </div>*@
+            @*<div class="form-group">
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    <select asp-for="CompanyId" class ="form-control" asp-items="ViewBag.CompanyId"></select>
+                </div>*@
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,34 @@
+﻿@model AowCore.AppWeb.ViewModels.ProductsAttributeViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+    <h1>
+        @Html.ActionLink("<<Back to List", "Edit", "ProductCategories", new { id = @Model.ProductCategoryId }, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+        Create ProductAttribute
+    </h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="ProductCategoryId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<AowCore.AppWeb.ViewModels.ProductVariantsViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            "pageLength": 50
+            //"scrollX": true,
+            //"scrollY": "600px",
+            //// "order": [[3]],
+            //"aaSorting": []
+        });
+    });
+</script>
+<h2>
+    <i class=" fas fa-box-open"></i>Varients
+    <span class="pull-right">
+        @Html.ActionLink("Create Item Varients", "Create", "ProductVariants", new { productId = @ViewBag.ProductId }, htmlAttributes: new { @class = "btn btn-success" })
+    </span>
+</h2>
+
+
+<div class="table-responsive">
+    <table class="table" id="reportTable" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    <label>Option1</label>
+                </th>
+                <th>
+                    <label>Option2</label>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Size)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CostPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MRP)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SalePrice)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Option1Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Option2Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MRP)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalePrice)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "ProductVariants", new { id = item.Id }) |
+                    @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+                    @Html.ActionLink("Delete", "Delete", "ProductVariants", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+

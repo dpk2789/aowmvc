@@ -1,0 +1,162 @@
+﻿@model AowCore.AppWeb.ViewModels.ItemVarientsSearchViewModel
+@{
+    ViewData["Title"] = "ItemVarientsSearchPage";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Item Varients Search Page</h1>
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="container">
+            <span>
+                <img id="loading" style="display: none;" src="~/Content/ajax-loader.gif" />
+            </span>
+            <button class="btn btn-success" id="searchbtn">Search</button>
+
+            @{
+                foreach (var tag in Model.AttributesViewModel)
+                {
+                    <div style="float:left;padding:10px">
+                        @*<input type="checkbox" value=@tag.Id name="AttributeSelectedOnView">*@
+                        <label>@tag.Name</label>
+                        @foreach (var option in tag.AttributesOptionsViewModels)
+                        {
+                            <ul>
+                                <li>
+                                    <input type="checkbox" value=@option.Id name=OptionsSelectedOnView>
+                                    <label>@option.Name</label>
+                                </li>
+                            </ul>
+                        }
+
+                    </div>
+                }
+            }
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div id="searchdata">
+            <table class="table">
+                <tr>
+                    <th>
+                        <label>Name</label>
+                    </th>
+                    @*<th>
+                            <label>Option1</label>
+                        </th>
+                        <th>
+                            <label>Option2</label>
+                        </th>*@
+
+                    <th>
+                        <label>Size</label>
+                    </th>
+                    <th>
+                        <label>Cost Price</label>
+                    </th>
+                    <th>
+                        <label>MRP</label>
+                    </th>
+                    <th>
+                        <label>Sale Price</label>
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.ProductVariantsViewModel)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.Option1Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Option2Name)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Size)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CostPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MRP)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SalePrice)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "ProductVariants", new { id = item.Id }) |
+                            @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('input:checkbox').change(function () {
+        if ($(this).is(':checked'))
+            $(this).addClass('selected');
+        else
+            $(this).removeClass('selected')
+    });
+
+    $('#searchbtn').on('click', function (e) {
+        var favorite = [];
+        $.each($("input[name='OptionsSelectedOnView']:checked"), function () {
+            //favorite.push($(this).val());
+            favorite.push({
+                'Id': $(this).val(),
+            });
+        });
+
+        //alert(JSON.stringify(favorite));
+        $('#loading').html('<img src="/Content/ajax-loader.gif" /> loading...');
+       // var fileName = $("#txtImageUrl").val();
+        $('#loadingmessage').show();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("ItemVarientsSearchPageReport", "ProductAttributes")",
+            data: { data: JSON.stringify(favorite) },
+            // dataType: 'json',
+            success: function (data) {
+                console.log('success', data);
+                $("#searchdata").html(data.modelString);
+                $('#loadingmessage').hide();
+            },
+            error: function (exception) {
+                //alert('Exeption:' + exception);
+            }
+        });
+        e.preventDefault();
+    });
+
+    $(document)
+        .ready(function () {
+            $("#btnclear")
+                .click(function () {
+                    $("#ViolationCategories").val("");
+                    $("#Countries").val("");
+                    $("#Users").val("");
+                    $("#datepickerto").val("");
+                    $("#datepickerfrom").val("");
+                });
+
+        });
+    //$.get(action, null, function (data) {
+    //    $('#someDiv').html(data);
+    //}, 'html');
+</script>

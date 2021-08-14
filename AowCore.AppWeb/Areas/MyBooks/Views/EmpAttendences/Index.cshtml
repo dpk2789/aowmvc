@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AowCore.Domain.Payroll.EmpAttendence>
+
+@{
+    ViewData["Title"] = "Employee Attendence";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            "scrollX": true,
+            "pageLength": 25
+        });
+    });
+</script>
+<h1>Employee Attendence </h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table table-hover responsive" id="reportTable" style="width:100%">
+
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SrNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MachineNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnrollmentNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mode)
+            </th>          
+            <th>
+                @Html.DisplayNameFor(model => model.PunchTime)
+            </th>
+         
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SrNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MachineNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrollmentNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mode)
+                </td>               
+                <td>
+                    @Html.DisplayFor(modelItem => item.PunchTime)
+                </td>             
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |                 
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

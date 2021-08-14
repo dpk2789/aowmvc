@@ -1,0 +1,27 @@
+﻿@model AowCore.Domain.ProductAttribute
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Search Product Variants By Attribute</h2>
+<hr />
+@using (Html.BeginForm("ItemVarientsSearchPage", "ProductAttributes", FormMethod.Post, new { id = "questionForm", area = "MyBooks" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label>Select Product</label>
+        <div class="col-md-10">
+            @Html.DropDownList("ProductId", null, htmlAttributes: new { @class = "form-control" })
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Submit" class="btn btn-success" />
+        </div>
+    </div>
+}

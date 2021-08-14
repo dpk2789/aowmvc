@@ -1,0 +1,66 @@
+﻿@model AowCore.AppWeb.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h2>
+    @Html.ActionLink("<<Back to List", "Index", "Products", htmlAttributes: new { @class = "btn btn-sm btn-primary" })
+    <i class="fab fa-unity"></i>
+    Add Item
+</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ItemType" class="control-label">ItemType</label>
+                <select class="form-control" id="ItemTypeId" name="ItemType">
+                    <option>Select</option>
+                    <option value="Inventory Item">Inventory Item</option>
+                    <option value="Non Inventory Item">Non Inventory Item</option>
+                    <option value="Service">Service</option>
+                </select>
+                <span asp-validation-for="ItemType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductCategoryId" class="control-label">Select Category</label>
+                @*<select asp-for="ProductCategoryId" class="form-control" asp-items=@Model.ProductCategorySelectList>
+                    <option>Select Category</option>
+                </select>*@
+                @Html.DropDownList("ProductCategoryId", @Model.ProductCategorySelectList, "-Select Category-", new { id = "AccountId", @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTaxCode" class="control-label">HSN / Tax Code</label>
+                <input asp-for="ProductTaxCode" class="form-control" />
+                <span asp-validation-for="ProductTaxCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Code" class="control-label">Code/Unique Id</label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelNumber" class="control-label">ModelNumber</label>
+                <input asp-for="ModelNumber" class="form-control" />
+                <span asp-validation-for="ModelNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

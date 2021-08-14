@@ -1,0 +1,114 @@
+﻿@model IEnumerable<AowCore.AppWeb.ViewModels.VoucherViewModel>
+
+@{
+    ViewData["Title"] = "Journal Entries";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            "scrollX": true,
+           // "order": [[3]],
+            "aaSorting": []
+        });
+    });
+</script>
+<h1>Journal Entries</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="table-responsive">
+    <table class="table" id="reportTable" style="width:100%">
+        <thead>
+            <tr>
+             
+                <th>
+                    <label>Date</label>
+                </th>
+                <th>
+                    <label>Voucher Number</label>
+                </th>
+                <th>
+                    <label>Ledger</label>
+                </th>
+                <th>
+                    <label>Category</label>
+                </th>
+                <th>
+                    <label>Credit</label>
+                </th>
+                <th>
+                    <label>Debit</label>
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var voucher in Model)
+            {
+                foreach (var item in voucher.JournalEntryViewModel.OrderBy(x => x.SrNo))
+                {
+                    if (item.SrNo == 1)
+                    {
+                        <tr>
+                          
+                            <td>
+                                @item.VoucherDate.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.VoucherInvoice
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AccountName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RootCategory)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreditAmount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DebitAmount)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.VoucherId }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.VoucherId })
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>                        
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AccountName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RootCategory)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreditAmount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DebitAmount)
+                            </td>
+
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                }
+
+            }
+        </tbody>
+    </table>
+</div>

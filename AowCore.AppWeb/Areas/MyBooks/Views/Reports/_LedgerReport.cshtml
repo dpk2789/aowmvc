@@ -1,0 +1,114 @@
+﻿@model IEnumerable<AowCore.AppWeb.ViewModels.LedgerReportViewModel>
+
+@{
+    ViewBag.Title = "Reports";
+    Layout = null;
+}
+
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            "scrollX": true
+        });
+    });
+</script>
+
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-striped responsive" id="reportPartialTable" style="width:100%">
+        <thead>
+            <tr>
+
+                <th>
+                    <label>Voucher</label>
+                </th>
+                <th>
+                    <label>Date</label>
+                </th>
+                <th>
+                    <label>Subject</label>
+                </th>
+                <th>
+                    <label>Credit</label>
+                </th>
+                <th>
+                    <label>Debit</label>
+                </th>
+            </tr>
+        </thead>
+
+        @{
+            double creditTotal = 0;
+            double debitTotal = 0;
+            double openingBalance = 0;
+
+
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VoucherName)
+                    </td>
+                    <td>
+                        @item.Date.ToShortDateString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LedgerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreditAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DebitAmount)
+                    </td>
+
+                </tr>
+                creditTotal += @Convert.ToDouble(item.CreditAmount);
+                debitTotal += @Convert.ToDouble(item.DebitAmount);
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Total</td>
+                <td>@creditTotal</td>
+                <td>@debitTotal</td>
+                <td> </td>
+            </tr>
+            <tr>
+
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td>Opening Balance :<b><i class="fa fa-rupee"></i>@openingBalance.ToString("##,###.00")</b></td>
+
+            </tr>
+            <tr>
+                @{
+                    double total = Convert.ToDouble(@debitTotal - @creditTotal);
+                }
+
+                <td></td>
+                <td></td>
+                <td>
+                </td>
+                <td></td>
+                <td>
+                    @if (creditTotal > debitTotal)
+                    {
+                        <label>Closing Balance :</label> <b><i class="fa fa-rupee"></i>@total.ToString("##,###.00") Cr</b>
+                    }
+                    else
+                    {
+                        <label>Closing Balance :</label> <b><i class="fa fa-rupee"></i>@total.ToString("##,###.00") Dr</b>
+                    }
+
+                </td>
+            </tr>
+        }
+
+
+    </table>
+</div>
+
+

@@ -1,0 +1,55 @@
+﻿@model AowCore.AppWeb.ViewModels.SundryItemViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1> <a asp-action="Index" class="btn btn-primary btn-sm">Back to List</a>Edit Sundry Item</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LedgerId" class="control-label"></label>
+                <select asp-for="LedgerId" class="form-control" asp-items="ViewBag.LedgerId"></select>
+                <span asp-validation-for="LedgerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductCategoryId" class="control-label"></label>
+                <select asp-for="ProductCategoryId" class="form-control" asp-items="ViewBag.ProductCategoryId"></select>
+                <span asp-validation-for="ProductCategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <label asp-for="Percent" class="control-label"></label>
+                <input asp-for="Percent" class="form-control" />
+                <span asp-validation-for="Percent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NatureAddSub" class="control-label"></label>
+                <input asp-for="NatureAddSub" class="form-control" />
+                <span asp-validation-for="NatureAddSub" class="text-danger"></span>
+            </div>
+
+
+
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

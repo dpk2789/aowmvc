@@ -1,0 +1,496 @@
+﻿@model AowCore.AppWeb.ViewModels.VoucherViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#sandbox-container input').datepicker({
+            format: "dd-mm-yyyy"
+        });
+          
+    });
+</script>
+<style>
+    .ui-autocomplete {
+        position: absolute;
+        cursor: default;
+        z-index: 4000 !important
+    }
+</style>
+<h1>
+    @Html.ActionLink("<<Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+    Edit JournalEntry
+</h1>
+<hr />
+@using (Html.BeginForm("Edit", "JournalEntries", FormMethod.Post, new { id = "questionForm", area = "MyBooks" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="VoucherId" value="@Model.Id"/>
+    <div class="form-horizontal">
+
+        <div class="form-row">
+            @*<div class="form-group col-md-6">
+                    <label for="inputEmail4">Name</label>
+                    @Html.EditorFor(model => model.VoucherName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.VoucherName, "", new { @class = "text-danger" })
+                </div>*@
+            <div class="form-group col-md-6">
+                <label for="inputPassword4">Date </label>
+                <div class="" id="sandbox-container"><input type="text" class="form-control" name="Date" value="@Model.Date"></div>
+                @*@Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control abc" } })*@
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="VoucherNumber" class="control-label"></label>
+                <input asp-for="VoucherNumber" class="form-control" />
+                <span asp-validation-for="VoucherNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <table class="table table-hover table-bordered table-responsive table-striped" style="height:400px">
+            <thead>
+                <tr>
+                    <td class="th-lg">S.No</td>
+                    <td class="th-sm">Type</td>
+                    <td class="th-lg">Account</td>
+                    <td class="th-lg text-center">Dr</td>
+                    <td class="th-lg text-center">Cr</td>
+                    <td class="th-lg"></td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <select id="CrDrType" class="form-control" tabindex="1">
+                            <option selected>Select Cr/Dr</option>
+                            <option value="Dr">Dr</option>
+                            <option value="Cr">Cr</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" id="txtStoreItem" class="ui-autocomplete-input form-control" disabled data-url="@Url.Action("GetLedgersForJournalEntry", "JournalEntries")" placeholder="Enter Product" tabindex="2" />
+                        <input type="hidden" id="hdnledgerName" class="form-control" />
+                        <input type="hidden" id="hdnappendProductId" class="form-control" />
+                        <input type="hidden" id="hdnProductAccountId" class="form-control" />
+                        <input type="hidden" id="hdnAccountCategoryName" class="form-control  hdnAccountCategoryName" />
+                        <input type="hidden" id="hdnItemType" class="form-control  hdnItemType" />
+                        @*@Html.DropDownList("AccountId", ViewBag.AccountId as SelectList, "Select Account", htmlAttributes: new { @class = "form-control" })*@
+                    </td>
+
+                    <td><input type="text" id="txtAmount" class="form-control txtAmount" maxlength="7" placeholder="Debit Amount" tabindex="3" /> </td>
+                    <td><input type="text" id="txtAmountCr" class="form-control txtAmountCr" maxlength="7" placeholder="Credit Amount" tabindex="3" /> </td>
+                    <td>
+                        <a class="btnadd btn btn-sm btn-primary" id="btnadd" title="Add" tabindex="4"><i class="fas fa-plus"></i>Add</a>
+                        <a class="fas fa-edit  btnupdate" id="btnupdate" title="Edit" style="display:none;"></a>
+                        <a class="fas fa-eraser  btnnew" id="btnnew" title="New" style="display:none;"></a>
+                    </td>
+                </tr>
+            </thead>
+
+            <tbody id="tbodyorder" class="tbodyorder bordered">
+                @foreach (var item in Model.JournalEntryViewModel)
+                {
+                    <tr>
+                        <td>
+                            @item.SrNo
+                        </td>
+                        <td>
+                            @*<p class="txtStoreItem">@item.AutoGenerateName</p>*@
+                            @Html.DisplayFor(modelItem => item.CrDrType)
+                            <input type='hidden' class='cdid' value=@item.CrDrType />
+                        </td>
+                        <td>
+                            <p class='batchName'>@item.AccountName</p>
+                        </td>
+                        <td>
+                            <p class="debitAmount">@item.DebitAmount</p>
+                            <input type="hidden" id="hdnappendAmount" class="hdnappendAmount" value="@item.DebitAmount" />
+                        </td>
+                        <td>
+                            <p class="creditAmount">@item.CreditAmount</p>
+                            <input type="hidden" id="hdnappendAmountCr" class="hdnappendAmountCr" value="@item.CreditAmount" />
+                        </td>
+                        <td>
+
+                            @Html.HiddenFor(x => item.LedgerId, new { @class = "hdnappendProductId" })
+
+                            @*<a href="#" class="glyphicon glyphicon-pencil btnadd" id="btnadd" title="Add"></a>*@
+                            @*<button type="button" data-value="@item.LedgerId" class='fa fa-pencil'
+                                onclick='AddSubItems("@item.LedgerId","@item.Id")' style='cursor:pointer;'></button>*@
+                            <a class='fa fa-edit edit' style='cursor:pointer;' />
+                            <a class='fa fa-trash delete' style='cursor:pointer;' />
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                @Html.TextAreaFor(model => model.Note, new { id = "editor1", @class = "form-control", @placeholder = "Enter Note", style = "padding-left: 0px;" })
+                @*@Html.TextAreaFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Note" } })*@
+                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="form-group col-md-6">
+                <span>
+                    <img id="loading" style="display: none;" src="~/gif/ajax-loader.gif" />
+                </span>
+                <input type="submit" value="Save & Close" id="SaveClose" class="float-right btn btn-primary SaveOrder" /> &nbsp;&nbsp;
+                <input type="submit" value="Save & Next" id="SaveNext" class="float-right btn btn-success SaveOrder" />
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        function ClearAddCrDr() {
+            //   $('#CrDrType').val('0');
+            $('#hdnProductAccountId').val('');
+            $('#hdnProductId').val('');
+            $('#txtStoreItem').val('');
+            $('#txtAmount').val('');
+            $('#btnupdate').hide();
+            $('#btnnew').hide();
+            $('#btnadd').show();
+            $('#CrDrType').focus();
+        }
+
+        let sNo = 0;
+        function Add() {
+            //   $('#CrDrType').val('0');
+            var num1 = sNo;
+            var answer = parseInt(num1) + parseInt(1);
+            sNo++;
+            return (answer);
+        }
+
+        var loading = $("#loading");
+        $('#CrDrType').on("change", function (e) {
+            var headName = $("#CrDrType option:selected").text();
+            $(document).on({
+                ajaxStart: function () {
+                    loading.show();
+                },
+                ajaxStop: function () {
+                    loading.hide();
+                }
+            });
+            if (headName === 'Cr') {
+                $("#txtAmount").prop("disabled", true);
+                $("#txtAmountCr").prop("disabled", false);
+                $("#txtStoreItem").focus();
+            }
+            if (headName === 'Dr') {
+                $("#txtAmountCr").prop("disabled", true);
+                $("#txtAmount").prop("disabled", false);
+                $("#txtStoreItem").prop("disabled", false);
+                $("#txtStoreItem").focus();
+            }
+
+        });
+
+        $("#txtStoreItem").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                var url = $(this.element).data("url");
+                var crdr = $("#CrDrType option:selected").text();
+                $.getJSON(url, { term: request.term, HeadName: "Recipt", crdr: crdr }, function (data) {
+                    response(data)
+                })
+            },
+            appendTo: $(".modal-body ui-autocomplete-input"),
+            select: function (event, ui) {
+                if (ui.item.value === "no company") {
+                    window.location = "/";
+                }
+                var headName = $("#CrDrType option:selected").text();
+                if (headName === 'Cr') {
+                    $('#txtAmountCr').focus()
+                }
+                if (headName === 'Dr') {
+                    $('#txtAmount').focus()
+                }
+                $("#hdnappendProductId").val(ui.item.id);
+                $("#txtStoreItem").val(ui.item.value);
+                $("#hdnAccountCategoryName").val(ui.item.AccountCategoryName);
+
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    // alert(xhr.responseText);
+                    $(event.target).val("");
+                }
+
+
+            }
+        });
+
+
+        $('.btnadd').on("click", function (e) {
+            let newcontent = "";
+            let AccountId = $('#hdnProductAccountId').val();
+            let ledgerId = $('#hdnappendProductId').val();
+            let ledgerName = $("#txtStoreItem").val();
+            let CrDrType = $('#CrDrType').val();
+            let CrDrTypeName = $("#CrDrType option:selected").text();
+            let txtAmount = $('#txtAmount').val();
+            let txtAmountCr = $('#txtAmountCr').val();
+            let itemType = $('#hdnItemType').val();
+
+            $('.dvitemexistmsg').html("");
+            newcontent = "";
+            let x = 0;
+            $('#tbodyorder tr').each(function () {
+                x = parseFloat(x) + parseFloat(1);
+
+                var hdnappendhdnItemType = $(this).find(".hdnappendhdnItemType").val();
+                var hdnappendProductId = $(this).find(".hdnappendProductId").val();
+                var hdnappendLedgerName = $(this).find(".hdnappendLedgerName").val();
+                var hdnappendAmount = $(this).find(".hdnappendAmount").val();
+                var hdnappendAmountCr = $(this).find(".hdnappendAmountCr").val();
+
+
+                newcontent += "<tr >";
+                newcontent += "<td>" + x + " </td >";
+                newcontent += "<td>" + $(this).find("td").eq(1).html(); + " </td >";
+                newcontent += "<td>" + $(this).find("td").eq(2).html(); + " </td >";
+                newcontent += "<td>" + $(this).find("td").eq(3).html(); + " </td >";
+                newcontent += "<td >" + $(this).find("td").eq(4).html(); + "</td >";
+
+                newcontent += "<td  >";
+                newcontent += "<input type='hidden' class='hdnappendProductId' value=" + hdnappendProductId + " />";
+                newcontent += "<input type='hidden' class='hdnappendLedgerName' value=" + hdnappendLedgerName + " />";
+                newcontent += "<input type='hidden' class='hdnappendAmount' value=" + hdnappendAmount + " />";
+                newcontent += "<input type='hidden' class='hdnappendAmountCr' value=" + hdnappendAmountCr + " />";
+                newcontent += "<input type='hidden' class='hdnappendhdnItemType' value=" + hdnappendhdnItemType + " />";
+                //newcontent += "<a  class='fa fa-edit edit' style='cursor:pointer;'/>";
+                newcontent += "<a  class='fa fa-eraser delete' style='cursor:pointer;'/>";
+                newcontent += "</td >";
+                newcontent += "</tr >";
+            });
+
+            // totalamnt = parseFloat(totalamnt) + parseFloat(Amount);
+            sNo = parseFloat(sNo) + parseFloat(1);
+            if (txtAmountCr === "")
+                txtAmountCr = 0;
+            if (txtAmount === "")
+                txtAmount = 0;
+
+
+            newcontent += "<tr >";
+            newcontent += "<td  >" + sNo + " </td >";
+            newcontent += "<td   >";
+            newcontent += "<input type='hidden' class='cdid' value=" + CrDrType + " />";
+            newcontent += "<p class='crdrname'>" + CrDrTypeName + "</p>";
+            newcontent += "</td >";
+            newcontent += "<td   >";
+            newcontent += "<p class='productname'>" + ledgerName + "</p>";
+            newcontent += "</td >";
+            newcontent += "<td  >" + txtAmount + " </td >";
+            newcontent += "<td  >" + txtAmountCr + " </td >";
+            newcontent += "<td  >";
+            newcontent += "<input type='hidden' class='hdnappendLedgerName' />";
+            newcontent += "<input type='hidden' class='hdnappendProductId' value=" + ledgerId + " />";
+            newcontent += "<input type='hidden' class='hdnappendAmount' value=" + txtAmount + " />";
+            newcontent += "<input type='hidden' class='hdnappendAmountCr' value=" + txtAmountCr + " />";
+            newcontent += "<input type='hidden' class='hdnappendhdnItemType' value=" + itemType + " />";
+            //newcontent += "<a  class='fa fa-edit edit' style='cursor:pointer;'/>";
+            newcontent += "<a  class='fa fa-eraser delete' style='cursor:pointer;'/>";
+            newcontent += "</td >";
+            newcontent += "</tr >";
+
+            $('#tbodyorder').empty().append(newcontent);
+            //$(".hdnappendLedgerName").val(ledgerName);
+            //  $(".showimg").hide();
+            ClearAddCrDr();
+        });
+
+        $('.btnupdate').on("click", function (e) {
+            let totalamnt = 0;
+            let newcontent = "";
+            let ledgerId = $('#pid').val();
+            let AccountIdName = $("#AccountId option:selected").text();
+            let CrDrType = $('#CrDrType').val();
+            let CrDrTypeName = $("#CrDrType option:selected").text();
+            let txtAmount = $('#txtAmount').val();
+
+            $('.dvitemexistmsg').html("");
+            var isItemEdit = false;
+            newcontent = "";
+            $('#tbodyorder tr').each(function () {
+                let itemidrw = $(this).find('.pid').val();
+                if (AccountId == itemidrw) {
+                    isItemEdit = true;
+                    newcontent += "<tr >";
+                    newcontent += "<td   >";
+                    newcontent += "<input type='hidden' class='cdid' value=" + CrDrType + " />";
+                    newcontent += "<p class='crdrname'>" + CrDrTypeName + "</p>";
+                    newcontent += "</td >";
+                    newcontent += "<td   >";
+                    newcontent += "<input type='hidden' class='pid' value=" + ledgerId + " />";
+                    newcontent += "<p class='productname'>" + AccountIdName + "</p>";
+                    newcontent += "</td >";
+                    newcontent += "<td  >" + txtAmount + " </td >";
+                    newcontent += "<td   >";
+                    newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                    newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                    newcontent += "</td >";
+                    newcontent += "</tr >";
+                }
+                else {
+                    newcontent += "<tr >";
+                    newcontent += "<td>" + $(this).find("td").eq(0).html(); + " </td >";
+                    newcontent += "<td>" + $(this).find("td").eq(1).html(); + " </td >";
+                    newcontent += "<td  >" + parseFloat($(this).find("td").eq(2).html()).toFixed(2); + "</td >";
+                    newcontent += "<td   >";
+                    newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                    newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                    newcontent += "</td >";
+                    newcontent += "</tr >";
+                }
+
+            });
+            if (isItemEdit == false) {
+                newcontent += "<tr >";
+                newcontent += "<td   >";
+                newcontent += "<input type='hidden' class='cdid' value=" + CrDrType + " />";
+                newcontent += "<p class='crdrname'>" + CrDrTypeName + "</p>";
+                newcontent += "</td >";
+                newcontent += "<td   >";
+                newcontent += "<input type='hidden' class='pid' value=" + ledgerId + " />";
+                newcontent += "<p class='productname'>" + AccountIdName + "</p>";
+                newcontent += "</td >";
+                newcontent += "<td  >" + txtAmount + " </td >";
+                newcontent += "<td   >";
+                newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                newcontent += "</td >";
+                newcontent += "</tr >";
+            }
+
+            newcontent += "<tr >";
+            newcontent += "<td ></td >";
+            newcontent += "<td  ></td >";
+            newcontent += "<td  ></td >";
+            newcontent += "<td ></td >";
+            newcontent += "<td  ></td >";
+            newcontent += "<td  >Total</td >";
+            newcontent += "<td    align='right'>" + parseFloat(totalamnt).toFixed(2) + " </td >";
+            newcontent += "</tr >";
+
+            $('#tbodyorder').empty().append(newcontent);
+            ClearAddClearAddCrDr()
+        });
+
+        $("#tbodyorder").on('click', '.edit', function (e) {
+            e.preventDefault();
+            var tr = $(this).closest('tr');
+
+
+            var CrDrType = tr.find(".cdid").val();
+            var ledgerId = tr.find(".pid").val();
+            var ledgerName = tr.find(".hdnappendLedgerName").val();
+            var ledgerAmount = tr.find(".hdnappendAmount").val();
+            var txtAmount = tr.find("td").eq(2).html();
+
+            $('#CrDrType').val(CrDrType);
+            $('#hdnProductId').val(ledgerId);
+            $('#hdnledgerName').val(ledgerName);
+            $('#txtStoreItem').val(ledgerName);
+            $('#txtAmount').val(ledgerAmount);
+
+
+            $('#btnupdate').show();
+            $('#btnnew').show();
+            $('#btnadd').hide();
+        })
+
+        $("#tbodyorder").on('click', '.delete', function (e) {
+            // e.preventDefault();
+            var tr = $(this).closest('tr');
+            tr.css("background-color", "#FF3700");
+            tr.remove();
+            //  ReCalculateTotal();
+        })
+
+        $('.SaveOrder').on("click", function (e) {
+            e.preventDefault();
+            //$(".ajax-loading-block-window").show();
+            var OrderDetl = [];
+
+            $('#tbodyorder tr').each(function () {
+                var CrDrType = $(this).find(".cdid").val();
+                var LedgerId = $(this).find(".hdnappendProductId").val();
+                var drAmount = $(this).find(".hdnappendAmount").val();
+                var crAmount = $(this).find(".hdnappendAmountCr").val();
+                //var ledgerName = $(this).find(".hdnappendLedgerName").val();
+
+                var hdnappendhdnItemType = $(this).find(".hdnappendhdnItemType").val();
+                OrderDetl.push({
+                    'CrDrType': CrDrType, 'LedgerId': LedgerId, 'DebitAmount': drAmount, 'CreditAmount': crAmount
+                });
+            });
+
+            alert(JSON.stringify(OrderDetl))
+            if (OrderDetl.length > 0) {
+                $('#OrderDetl').val(JSON.stringify(OrderDetl))
+            }
+
+            let form = $('#questionForm');
+            let token = $('input[name="__RequestVerificationToken"]', form).val();
+            let url = form.prop('action');
+            $('#loading').html('<img src="/Content/ajax-loader.gif" /> loading...');
+            $(".SaveOrder").attr("class", "btn btn-primary SaveOrder disabled");
+            let Invoice = $('#VoucherNumber').val();
+            let Date = $('#Date').val();
+          //  let Date = $('#Date').val();
+            let voucherData = {
+                Date: $('#Date').val(),
+                Invoice: $('#VoucherNumber').val(),
+                DateCreated: new Date(),
+                Note: $('#editor1').val()
+            };
+            let Id = $('#VoucherId').val();
+            alert(Id);
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    __RequestVerificationToken: token, Id: Id, data: JSON.stringify(OrderDetl), voucherData: JSON.stringify(voucherData), Invoice: Invoice, Date: Date
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success == true) {
+                        $('#loading').html(data);
+                        $(".SaveOrder").attr("class", "btn btn-success SaveOrder");
+                        showNotification("Value Saved successfully", "success");
+                        window.location = "/MyBooks/JournalEntries";
+                    }
+                },
+                error: function (xhr, status) {
+                    alert(xhr.responseText);
+                    $(".ajax-loading-block-window").hide();
+                    $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+                    showNotification(data.message, "failed");
+                }
+            });
+            //}
+            //else {
+            //    //alert('error');
+            //    $(".ajax-loading-block-window").hide();
+            //}
+        })
+    </script>
+}

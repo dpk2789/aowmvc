@@ -1,0 +1,13 @@
+﻿@model AowCore.AppWeb.ViewModels.DashboardViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextaccessor
+@{
+    ViewData["Title"] = "DashBoard";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    foreach (var cookie in httpContextaccessor.HttpContext.Request.Cookies)
+    {
+        @cookie.Key @cookie.Value
+    }
+}

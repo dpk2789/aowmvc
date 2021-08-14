@@ -1,0 +1,96 @@
+﻿@model IEnumerable<AowCore.Domain.FinancialYear>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+<h1>
+    @Html.ActionLink("Create New F Yr", "Create", "FinancialYears", new { companyId = @ViewBag.CompanyId }, htmlAttributes: new { @class = "btn btn-success" })
+    Financial Years
+</h1>
+
+<input type="hidden" value="@ViewBag.CompanyId" class="hdncompanyid" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.End)
+            </th>
+
+            @*<th>
+                    @Html.DisplayNameFor(model => model.IsLocked)
+                </th>*@
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @item.Start.Value.ToShortDateString()
+                </td>
+                <td>
+                    @item.End.Value.ToShortDateString()
+                </td>
+
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsLocked)
+                    </td>*@
+
+                <td>
+                    <a asp-action="Edit" asp-controller="FinancialYears" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-controller="FinancialYears" asp-route-id="@item.Id">Delete</a> |
+                    <button type="button" value="@item.Id" class="btn btn-success btn-sm btnaccounts">Accounts</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<script>
+    $('.btnaccounts').on("click", function (e) {
+        var form = $('#questionForm');
+        var token = $('input[name="__RequestVerificationToken"]', form).val();
+        var financialYearId = $(this).val();
+        var companyid = $(".hdncompanyid").val();
+        //alert(companyid)
+        //alert(token)
+
+        $.ajax({
+            url: "/MyBooks/DashBoard/Index",
+            type: "POST",
+            data: { __RequestVerificationToken: token, 'financialYearId': financialYearId, 'companyid': companyid },
+            dataType: "json",
+            success: function (data) {
+                if (data.success == true) {
+                    $('#loading').html(data);
+                    $(".SaveOrder").attr("class", "btn btn-success SaveOrder");
+                    window.location = data.newLocation;
+                }
+            },
+            error: function (xhr, status) {
+                alert(xhr.responseText);
+                $(".ajax-loading-block-window").hide();
+                $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+
+            }
+        });
+    });
+</script>
+
+

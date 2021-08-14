@@ -1,0 +1,161 @@
+﻿@model AowCore.AppWeb.ViewModels.LedgerReportViewModel
+
+@{
+    ViewData["Title"] = "Ledger Report";
+}
+
+<h1>Ledger Report</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <table class="table table-bordered table-striped responsive">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+
+                        <select asp-for="LedgerId" class="form-control" asp-items="ViewBag.Ledgers">
+                            <option value="0">Select Ledger</option>
+                        </select>
+                    </div>
+
+                </td>
+                <td>
+                    <div class="form-group form-group-sm">
+                        <div>
+                            <select class="form-control dropdown">
+                                <option value="0">Select File Option</option>
+                                <option value="1">Dispatch</option>
+                                <option value="2">Recieve</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input type="text" id="datepickerto" class="form-control" placeholder="To Date">
+                </td>
+                <td>
+                    <input type="text" id="datepickerfrom" class="form-control" placeholder="From Date">
+                </td>
+                <td>
+                    <button class="btn btn-xs btn-success" id="searchbtn">Search</button>
+                    <span>
+                        <img id="loading" style="display: none;" src="~/gif/ajax-loader.gif" />
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</form>
+<div id="dailydata">
+
+
+</div>
+<script>
+    var loading = $("#loading");
+    $(document).on({
+        ajaxStart: function () {
+            loading.show();
+        },
+        ajaxStop: function () {
+            loading.hide();
+        }
+    });
+    $('#searchbtn').on('click', function (e) {
+        var ledgerId = $("#LedgerId").val();
+        var todate = $("#datepickerto").val();
+        var fromdate = $("#datepickerfrom").val();
+        $('#loadingmessage').show();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("DisplaySearchResults", "Reports")",
+            data: { Id: ledgerId, todate: todate, fromdate: fromdate },
+            // dataType: 'json',
+            success: function (data) {
+                console.log('success', data);
+                $("#dailydata").html(data.modelString);
+                $('#loadingmessage').hide();
+            },
+            error: function (exception) {
+                //alert('Exeption:' + exception);
+            }
+        });
+        e.preventDefault();
+    });
+
+    $(document)
+        .ready(function () {
+            $("#btnclear")
+                .click(function () {
+                    $("#ViolationCategories").val("");
+                    $("#Countries").val("");
+                    $("#Users").val("");
+                    $("#datepickerto").val("");
+                    $("#datepickerfrom").val("");
+                });
+
+        });
+    //$.get(action, null, function (data) {
+    //    $('#someDiv').html(data);
+    //}, 'html');
+</script>
+
+
+@*<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.VoucherName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.VoucherName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RefId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Note)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>*@

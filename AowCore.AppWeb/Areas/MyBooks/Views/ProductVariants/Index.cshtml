@@ -1,0 +1,168 @@
+﻿@model IEnumerable<AowCore.Domain.ProductVariant>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AutoGenerateName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MRP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SalePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaxType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailableForSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShowOnWebsite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Is_NewArrival)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Is_FeaturedProduct)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Is_BestSeller)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Is_FreeShipping)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Is_Taxable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThumbMainImageName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductAttributeOptions1Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductAttributeOptions2Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductAttributeOptionsId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModelNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AutoGenerateName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MRP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaxType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAvailableForSale)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShowOnWebsite)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Is_NewArrival)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Is_FeaturedProduct)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Is_BestSeller)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Is_FreeShipping)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Is_Taxable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThumbMainImageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Products.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductAttributeOptions1Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductAttributeOptions2Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductAttributeOptionsId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

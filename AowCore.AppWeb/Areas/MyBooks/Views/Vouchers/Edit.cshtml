@@ -1,0 +1,158 @@
+﻿@model AowCore.AppWeb.ViewModels.VoucherViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#sandbox-container input').datepicker({
+            format: "dd-mm-yyyy"
+        });
+
+    });
+</script>
+<style>
+    .ui-autocomplete {
+        position: absolute;
+        cursor: default;
+        z-index: 4000 !important
+    }
+</style>
+<h1>
+    @Html.ActionLink("<<Back to List", "Index", new { voucherName = Model.VoucherName, area = "MyBooks" }, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+    Edit JournalEntry
+</h1>
+<hr />
+@using (Html.BeginForm("Edit", "JournalEntries", FormMethod.Post, new { id = "questionForm", area = "MyBooks" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="VoucherId" value="@Model.Id" />
+    <div class="form-horizontal">
+
+        <div class="form-row">
+            @*<div class="form-group col-md-6">
+                    <label for="inputEmail4">Name</label>
+                    @Html.EditorFor(model => model.VoucherName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.VoucherName, "", new { @class = "text-danger" })
+                </div>*@
+            <div class="form-group col-md-6">
+                <label for="inputPassword4">Date </label>
+                <div class="" id="sandbox-container"><input type="text" class="form-control" name="Date" value="@Model.Date"></div>
+                @*@Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control abc" } })*@
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="VoucherNumber" class="control-label"></label>
+                <input asp-for="VoucherNumber" class="form-control" />
+                <span asp-validation-for="VoucherNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <table class="table table-hover table-bordered table-responsive table-striped" style="height:400px">
+            <thead>
+                <tr>
+                    <td class="th-lg">S.No</td>
+                    <td class="th-sm">Type</td>
+                    <td class="th-lg">Account</td>
+                    <td class="th-lg text-center">Dr</td>
+                    <td class="th-lg text-center">Cr</td>
+                    <td class="th-lg"></td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <select id="CrDrType" class="form-control" tabindex="1">
+                            <option selected>Select Cr/Dr</option>
+                            <option value="Dr">Dr</option>
+                            <option value="Cr">Cr</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" id="txtStoreItem" class="ui-autocomplete-input form-control" disabled data-url="@Url.Action("GetLedgersForJournalEntry", "JournalEntries")" placeholder="Enter Product" tabindex="2" />
+                        <input type="hidden" id="hdnledgerName" class="form-control" />
+                        <input type="hidden" id="hdnappendProductId" class="form-control" />
+                        <input type="hidden" id="hdnProductAccountId" class="form-control" />
+                        <input type="hidden" id="hdnAccountCategoryName" class="form-control  hdnAccountCategoryName" />
+                        <input type="hidden" id="hdnItemType" class="form-control  hdnItemType" />
+                        @*@Html.DropDownList("AccountId", ViewBag.AccountId as SelectList, "Select Account", htmlAttributes: new { @class = "form-control" })*@
+                    </td>
+
+                    <td><input type="text" id="txtAmount" class="form-control txtAmount" maxlength="7" placeholder="Debit Amount" tabindex="3" /> </td>
+                    <td><input type="text" id="txtAmountCr" class="form-control txtAmountCr" maxlength="7" placeholder="Credit Amount" tabindex="3" /> </td>
+                    <td>
+                        <a class="btnadd btn btn-sm btn-primary" id="btnadd" title="Add" tabindex="4"><i class="fas fa-plus"></i>Add</a>
+                        <a class="fas fa-edit  btnupdate" id="btnupdate" title="Edit" style="display:none;"></a>
+                        <a class="fas fa-eraser  btnnew" id="btnnew" title="New" style="display:none;"></a>
+                    </td>
+                </tr>
+            </thead>
+
+            <tbody id="tbodyorder" class="tbodyorder bordered">
+                @foreach (var item in Model.JournalEntryViewModel)
+                {
+                    <tr>
+                        <td>
+                            @item.SrNo
+                        </td>
+                        <td>
+                            @*<p class="txtStoreItem">@item.AutoGenerateName</p>*@
+                            @Html.DisplayFor(modelItem => item.CrDrType)
+                            <input type='hidden' class='cdid' value=@item.CrDrType />
+                        </td>
+                        <td>
+                            <p class='batchName'>@item.AccountName</p>
+                        </td>
+                        <td>
+                            <p class="debitAmount">@item.DebitAmount</p>
+                            <input type="hidden" id="hdnappendAmount" class="hdnappendAmount" value="@item.DebitAmount" />
+                        </td>
+                        <td>
+                            <p class="creditAmount">@item.CreditAmount</p>
+                            <input type="hidden" id="hdnappendAmountCr" class="hdnappendAmountCr" value="@item.CreditAmount" />
+                        </td>
+                        <td>
+
+                            @Html.HiddenFor(x => item.LedgerId, new { @class = "hdnappendProductId" })
+
+                            @*<a href="#" class="glyphicon glyphicon-pencil btnadd" id="btnadd" title="Add"></a>*@
+                            @*<button type="button" data-value="@item.LedgerId" class='fa fa-pencil'
+                                onclick='AddSubItems("@item.LedgerId","@item.Id")' style='cursor:pointer;'></button>*@
+                            <a class='fa fa-edit edit' style='cursor:pointer;' />
+                            <a class='fa fa-trash delete' style='cursor:pointer;' />
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                @Html.TextAreaFor(model => model.Note, new { id = "editor1", @class = "form-control", @placeholder = "Enter Note", style = "padding-left: 0px;" })
+                @*@Html.TextAreaFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Note" } })*@
+                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="form-group col-md-6">
+                <span>
+                    <img id="loading" style="display: none;" src="~/gif/ajax-loader.gif" />
+                </span>
+                <input type="submit" value="Save & Close" id="SaveClose" class="float-right btn btn-primary SaveOrder" /> &nbsp;&nbsp;
+                <input type="submit" value="Save & Next" id="SaveNext" class="float-right btn btn-success SaveOrder" />
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/myscript/purchaseBill/addupdatedeleteVoucherEntry.js"></script>
+}

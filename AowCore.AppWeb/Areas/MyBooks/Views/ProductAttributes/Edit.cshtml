@@ -1,0 +1,93 @@
+﻿@model AowCore.AppWeb.ViewModels.ProductsAttributeViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h1>
+    @Html.ActionLink("<<Back to List", "Edit", "ProductCategories", new { id = @Model.ProductCategoryId }, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+    Edit Attribute
+</h1>
+
+<hr />
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="ProductCategoryId" class="control-label"></label>
+        @Html.DropDownList("ProductCategoryId", (IEnumerable<SelectListItem>)ViewBag.ProductCategoryId, new { @class = "form-control" })
+        <span asp-validation-for="ProductCategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input id="btnAdd" type="button" value="Add Options" class="btn btn-primary" onclick="AddTextBox()" />
+        <input type="submit" value="Save" class="btn btn-success" />
+    </div>
+    <div class="row">
+        <div class="col-xl-6">
+            @if (Model.AttributesOptions != null)
+            {
+                foreach (var option in Model.AttributesOptions)
+                {
+                    <ul>
+                        <li>
+                            @option.Name &nbsp;&nbsp;
+                            <a href="@Url.Action("Edit","ProductAttributeOptions" , new { id = option.Id  })" data-modal="editattributeoption" class="fa fa-edit">Edit</a> |
+                            <a href="@Url.Action("Delete","ProductAttributeOptions" , new { id = option.Id  })" data-modal="deleteattributeoption" class="fa fa-trash">Delete</a>
+
+                            @*@Html.ActionLink("Edit", "Edit", new { id = option.Id }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = option.Id })*@
+                        </li>
+                    </ul>
+                }
+            }
+
+        </div>
+    </div>
+
+
+    <br />
+    <div id="TextBoxContainer">
+        <!--Textboxes will be added here -->
+    </div>
+
+
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        function GetDynamicTextBox(value) {
+            return '<input name = "AttributeOptions" type="text" value = "' + value + '" />' +
+                '<input type="button" value="Remove" onclick = "RemoveTextBox(this)" />'
+        }
+        function AddTextBox() {
+            var div = document.createElement('div');
+            div.innerHTML = GetDynamicTextBox("");
+            document.getElementById("TextBoxContainer").appendChild(div);
+        }
+
+        function RemoveTextBox(div) {
+            document.getElementById("TextBoxContainer").removeChild(div.parentNode);
+        }
+
+        function RecreateDynamicTextboxes() {
+            var values = eval('<%=Values%>');
+            if (values != null) {
+                var html = "";
+                for (var i = 0; i < values.length; i++) {
+                    html += "<div>" + GetDynamicTextBox(values[i]) + "</div>";
+                }
+                document.getElementById("TextBoxContainer").innerHTML = html;
+            }
+        }
+        window.onload = RecreateDynamicTextboxes;
+    </script>
+}

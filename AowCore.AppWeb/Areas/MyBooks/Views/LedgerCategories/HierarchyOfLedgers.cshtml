@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "HierarchyOfLedgers";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Hierarchy Of Ledgers</h2>
+
+<div class="box-inner">
+    <div class="box-content">
+
+        <hr />
+        <p class="text-danger">@TempData["MessageToClient"]</p>
+        <p class="text-success">@TempData["MessageToClientSuccess"]</p>
+        <div class="table-responsive">
+            @*<table class="table table-hover table-striped table-condensed table-bordered" id="dataTables">
+                    <p>
+                        <br />
+                        <a href="/MyBooks/LedgerCategories/Create" class="btn btn-success btn-xs">Create New</a>
+                    </p>
+                </table>*@
+            <div id="categories">
+                @Html.Raw(@Model)
+            </div>
+        </div>
+    </div>
+</div>
+

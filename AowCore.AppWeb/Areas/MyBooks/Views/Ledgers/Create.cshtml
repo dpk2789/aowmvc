@@ -1,0 +1,64 @@
+﻿@model AowCore.Domain.Ledger
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h1>
+    <a asp-action="Index" class="btn btn-sm btn-primary">Back to List</a>
+    Create Ledger
+</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LedgerCategoryId" class="control-label">Ledger Category</label>
+                <select asp-for="LedgerCategoryId" class="form-control" asp-items="ViewBag.LedgerCategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="OpeningBalanceCrDr" class="control-label">Cr/Dr</label>
+                    <select asp-for="OpeningBalanceCrDr" class="form-control">
+                        <option value=""></option>
+                        <option value="Cr">Cr</option>
+                        <option value="Dr">Dr</option>
+                    </select>
+                    @*<input asp-for="OpeningBalanceCrDr" class="form-control" />*@
+                    <span asp-validation-for="OpeningBalanceCrDr" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="OpeningBalance" class="control-label"></label>
+                    <input asp-for="OpeningBalance" class="form-control" />
+                    <span asp-validation-for="OpeningBalance" class="text-danger"></span>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

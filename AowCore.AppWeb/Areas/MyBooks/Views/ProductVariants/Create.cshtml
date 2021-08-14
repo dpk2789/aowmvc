@@ -1,0 +1,124 @@
+﻿@model AowCore.AppWeb.ViewModels.ProductVariantsViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h1>
+    @Html.ActionLink("<<Back to List", "Edit", "Products", new { id = @Model.ProductId }, htmlAttributes: new { @class = "btn btn-sm btn-success" })
+    Create Product Variant
+</h1>
+
+<hr />
+<div class="row">
+
+    <form asp-action="Create">
+        <input type="hidden" asp-for="ProductId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Code" class="control-label"></label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ModelNumber" class="control-label"></label>
+            <input asp-for="ModelNumber" class="form-control" />
+            <span asp-validation-for="ModelNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Discription" class="control-label"></label>
+            <input asp-for="Discription" class="form-control" />
+            <span asp-validation-for="Discription" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Size" class="control-label"></label>
+            <input asp-for="Size" class="form-control" />
+            <span asp-validation-for="Size" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CostPrice" class="control-label"></label>
+            <input asp-for="CostPrice" class="form-control" />
+            <span asp-validation-for="CostPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MRP" class="control-label"></label>
+            <input asp-for="MRP" class="form-control" />
+            <span asp-validation-for="MRP" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SalePrice" class="control-label"></label>
+            <input asp-for="SalePrice" class="form-control" />
+            <span asp-validation-for="SalePrice" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="container">
+                    @{
+                        foreach (var tag in Model.AttributesViewModels)
+                        {
+                            <div style="float:left;padding:10px">
+                                @*<input type="checkbox" value=@tag.Id name="AttributeSelectedOnView">*@
+                                <label>@tag.Name</label>
+                                @foreach (var option in tag.AttributesOptionsViewModels)
+                                {
+                                    <ul>
+                                        <li>
+                                            <input type="checkbox" value=@option.Id name=OptionsSelectedOnView>
+                                            <label>@option.Name</label>
+                                        </li>
+                                    </ul>
+                                }
+
+                            </div>
+                        }
+                    }
+
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+@*<div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="IsAvailableForSale" /> @Html.DisplayNameFor(model => model.IsAvailableForSale)
+        </label>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="ShowOnWebsite" /> @Html.DisplayNameFor(model => model.ShowOnWebsite)
+        </label>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="Is_NewArrival" /> @Html.DisplayNameFor(model => model.Is_NewArrival)
+        </label>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="Is_FeaturedProduct" /> @Html.DisplayNameFor(model => model.Is_FeaturedProduct)
+        </label>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="Is_BestSeller" /> @Html.DisplayNameFor(model => model.Is_BestSeller)
+        </label>
+    </div>*@

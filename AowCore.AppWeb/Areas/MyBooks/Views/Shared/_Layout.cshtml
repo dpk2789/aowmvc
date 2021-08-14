@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AowCore.AppWeb</title>
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/jqueryui/themes/base/theme.min.css" rel="stylesheet" />
+    <link href="~/jqueryui/jquery-ui.theme.css" rel="stylesheet" />
+    <link href="~/DataTables/datatables.min.css" rel="stylesheet" />
+    <link href="~/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/jqueryui/jquery-ui.min.js"></script>
+    <style>
+        .vertical-menu {
+            width: 200px; /* Set a width if you like */
+            margin-bottom: 1rem;
+            border: 1px solid #000000;
+        }
+
+            .vertical-menu a {
+                /*background-color: #eee; /**/ Grey background color */ color: black; /* Black text color */
+                display: block; /* Make the links appear below each other */
+                padding: 12px; /* Add some padding */
+                text-decoration: none; /* Remove underline from links */
+            }
+
+                .vertical-menu a:hover {
+                    background-color: #ccc; /* Dark grey background on mouse-over */
+                }
+
+                .vertical-menu a.active {
+                    background-color: #4CAF50; /* Add a green color to the "active/current" link */
+                    color: white;
+                }
+    </style>
+</head>
+<body>
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextaccessor
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" href="/Companies/Index">  <i class="fab fa-soundcloud"></i>Accounting On Web</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>*@
+
+                        <li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="nav-link text-dark" href="/MyBooks/DashBoard/DashBoard/">DashBoard <span class="sr-only">(current)</span></a>
+                                <span class="sr-only">(current)</span>
+                            }
+
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Items
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="@Url.Action("Index", "ProductCategories")">Categories</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Products")">Items</a>
+                                    <a class="dropdown-item" href="@Url.Action("Details", "ProductAttributes")">Search by Attribute</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "TaxCategories")">Tax Category</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "TaxItems")">Tax Items</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "SundryItems")">Sundry Items</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Ledgers
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="@Url.Action("Index", "LedgerCategories")">Categories</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Ledgers")">Ledgers</a>
+                                    <a class="dropdown-item" href="@Url.Action("HierarchyOfLedgers", "LedgerCategories")">Hierarchy of Ledgers</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Ledgers")">Customers</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Vouchers
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/MyBooks/Vouchers/Index?voucherName=Payment">Journal Entry</a>
+                                    <a class="dropdown-item" href="/MyBooks/Vouchers/Index?voucherName=Recipt">Payment Recieve</a>
+                                    <a class="dropdown-item" href="/MyBooks/Vouchers/Index?voucherName=Payment">Payment</a>
+                                    <a class="dropdown-item" href="/MyBooks/Vouchers/Index?voucherName=Contra">Contra </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "PurchaseDebitNote")">Purchase Debit Note</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "PurchaseDebitNote")">Sale Credit Note</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/MyBooks/VouchersWithItems/Index?voucherName=Sale Invoice">Sale Invoice</a>
+                                    <a class="dropdown-item" href="/MyBooks/VouchersWithItems/Index?voucherName=Purchase Bill">Purchase Bill</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Reports")">Amount Payable</a>
+                                    <a class="dropdown-item" href="@Url.Action("ReceivedFiles", "FilesDispatch")">Amount Recievable</a>
+                                    <a class="dropdown-item" href="@Url.Action("BankReconciliation", "Reports")">Bank Reconciliation</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Reports")">By Ledgers</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "CurrentStock")">Current Stock</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Payroll
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="@Url.Action("Index", "EmpAttendences")">Employee Attendences</a>
+                                    <a class="dropdown-item" href="@Url.Action("Upload", "EmpAttendences")">Upload</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "EmpAttendences")">Employee</a>
+                                    <a class="dropdown-item" href="@Url.Action("Report", "EmpAttendences")">Reports</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "CurrentStock")">Current Stock</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                @*<br /><br /> <br /><br />*@
+                <div class="vertical-menu">
+                    <a href="/MyBooks/DashBoard/DashBoard" class="active">Home</a>
+                    <a href="/MyBooks/LedgerCategories/Create">Add Ledger Categories</a>
+                    <a href="/MyBooks/Ledgers/Create">Add Ledger </a>
+                    <a href="/MyBooks/Products/Create">Add Item</a>
+                    <a href="/MyBooks/TaxItems/Create">Add Tax Item</a>
+                    <a href="/MyBooks/SundryItems/Create">Add Sundry Item</a>
+                    <div class="ui-menu-divider"></div>
+                    <a href="/MyBooks/VouchersWithItems/Create?voucherName=Sales Invoice">Add Sales Invoice</a>
+                    <a href="/MyBooks/VouchersWithItems/Create?voucherName=Purchase Bill">Add Purchase Bill </a>
+                    <a href="/MyBooks/JournalEntries/Create">Add Journal Entry </a>
+                    <a href="/MyBooks/Vouchers/Create?voucherName=Payments">Add Payment</a>
+                    <a href="/MyBooks/Vouchers/Create?voucherName=Recipt">Add Recipt</a>
+                    <a href="/MyBooks/Vouchers/Create?voucherName=Contra">Add Contra </a>
+                    <a href="/MyBooks/Vouchers/Create?voucherName=Debit Note">Add Debit Note</a>
+                    <a href="/MyBooks/Vouchers/Create?voucherName=Credit Note">Add Credit Note </a>
+                </div>
+            </div>
+            <div class="col-md-10">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - AowCore.AppWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/moment.js/moment.js"></script>
+    <script src="~/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <!-- Datatable JS files -->
+    <script src="~/DataTables/datatables.min.js"></script>
+    <script src="~/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script>
+        function showNotification(message, type) {
+            toastr.options = {
+                "closeButton": true,
+                "positionClass": "toast-top-center",
+                "timeOut": "10000"
+            };
+            switch (type) {
+                case 'success':
+                    toastr.success(message);
+                    break;
+                case 'error':
+                    toastr.error(message);
+                    break;
+                case 'warning':
+                    toastr.warning(message);
+                    break;
+            }
+        }
+    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Partials", required: false)
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

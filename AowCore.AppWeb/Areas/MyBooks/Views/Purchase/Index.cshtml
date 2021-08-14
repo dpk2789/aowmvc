@@ -1,0 +1,93 @@
+﻿@model IEnumerable<AowCore.AppWeb.ViewModels.VoucherInvoiceViewModel>
+
+@{
+    ViewData["Title"] = "Purchase Bill";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            "scrollX": true,
+            // "order": [[3]],
+            "aaSorting": []
+        });
+    });
+</script>
+<h1>Purchase Bills </h1>
+
+<p>
+    @*@Html.ActionLink("Add", "Create", "Vouchers", new { voucherName = @ViewBag.VoucherName }, htmlAttributes: new { @class = "btn btn-sm btn-primary" })
+        <a asp-action="Create">Create New</a>*@
+    <a href="/MyBooks/Purchase/Create">Add Purchase Bill</a>
+</p>
+<div class="table-responsive">
+    <table class="table" id="reportTable" style="width:100%">
+        <thead>
+            <tr>
+
+                <th>
+                    <label>Date</label>
+                </th>
+                <th>
+                    <label>Voucher Number</label>
+                </th>
+                <th>
+                    <label>Ledger</label>
+                </th>
+                <th>
+                    <label>Total</label>
+                </th>
+
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var voucher in Model)
+            {
+                <tr>
+
+                    <td>
+                        @voucher.Date.ToShortDateString()
+                    </td>
+                    <td>
+                        @voucher.VoucherNumber
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => voucher.LedgerName)
+                    </td>
+
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => voucher.Total)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = voucher.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = voucher.Id })
+                    </td>
+                </tr>
+                foreach (var item in voucher.VoucherItemsViewModels.OrderBy(x => x.SrNo))
+                {
+                    <tr>
+
+
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+
+
+                        <td>
+                        </td>
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+</div>

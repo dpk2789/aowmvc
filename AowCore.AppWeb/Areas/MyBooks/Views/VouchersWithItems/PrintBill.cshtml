@@ -1,0 +1,499 @@
+﻿@model AowCore.AppWeb.ViewModels.PrintViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+
+    <title>Invoice</title>
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/Content/EditableInvoice/css/stylecafe.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    @*<script src="~/Content/EditableInvoice/js/example.js"></script>*@
+    <script src="~/Content/plugins/jQuery-Plugin-To-Print-Any-Part-Of-Your-Page-Print/jQuery.print.js"></script>
+    <style>
+        .invoice .invoice-block {
+            text-align: right;
+        }
+
+        .invoice-payment-details > span {
+            float: right;
+            text-align: right;
+        }
+
+        .customer-title {
+            display: block;
+            /*background-color: darkred;
+            color: white;*/
+            width: 200px;
+            height: 120px;
+            text-align: center;
+        }
+
+        .solution0 {
+            /*line-height: 200px;*/
+            vertical-align: bottom;
+        }
+
+        #page-wrap {
+            border: 1px solid black;
+            min-height: 550px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="printable">
+        <div id="page-wrap">
+
+            @*<div id="header">INVOICE</div>*@
+
+            <div id="identity">
+                <div style="float: left">
+                    <address>
+                        <img alt="T.O.I Management" id="image" src="~/Content/images/FINAL LOGO_small.jpg" class="hidden-xs" />
+                    </address>
+                </div>
+
+                <div id="address">
+                    <address>
+
+                        <strong>@Model.CompanyName </strong>
+                        <br /> @Model.AddressLine1
+                        <br /> @Model.AddressLine2 , @Model.City
+                        <br />
+                        <abbr title="Phone">Phone :- </abbr> @Model.Mobile
+                        <br />Mail Us :-<a href="mailto:#"> @Model.Email </a>
+                        <br />Website - @Model.Website
+                        <br />GSTIN Number - @Model.RegTaxNumber
+                    </address>
+                </div>
+                <div id="address">
+                    To:-
+                    <address>
+                        <strong>@Model.CustomerName </strong>
+                        <br />@(!string.IsNullOrEmpty(Model.CustomerAddressLine1))
+                        @(!string.IsNullOrEmpty(Model.CustomerAddressLine2))
+                        <br />@(!string.IsNullOrEmpty(Model.CustomerLandMark) ? string.Concat(" , " + Model.CustomerLandMark) : " ")
+                        @(!string.IsNullOrEmpty(Model.CustomerColony) ? Model.CustomerColony : " ")
+                        <br />@Model.CustomerCity - @Model.CustomerZipCode
+                        <br /> <abbr title="Phone">Phone :- </abbr> @Model.CustomerMobile
+                        <br />GSTIN Number - @Model.CustomerGSTIN
+                    </address>
+                </div>
+                <div id="logo">
+                    <div class="pull-right">
+                        <strong>Orignal</strong>
+                    </div><br />
+                    <table class="meta">
+                        <tr>
+                            <td class="meta-head">Invoice #</td>
+                            <td>
+                                <div>@Model.Invoice</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="meta-head">Date</td>
+                            <td>
+                                <div id="date"> @Html.DisplayFor(modelItem => Model.Date, "ShortDate")</div>
+                            </td>
+                        </tr>
+                        @if (Model.Head == "Sales Recipt" || Model.Head == "Revenue")
+                        {
+                            <tr>
+                                <td class="meta-head">Pay Meduim</td>
+                                <td>
+                                    <div class="due"> Cash</div>
+                                </td>
+                            </tr>
+                        }
+
+                        @*<tr>
+                                <td class="meta-head">Amount Due</td>
+                                <td>
+                                    <div class="due"><i class="fa fa-rupee"></i> @Model.AmountDue</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Amount Paid</td>
+                                <td>
+                                    <div class="due"><i class="fa fa-rupee"></i> @Model.AmountPaid</div></td>
+                            </tr>*@
+                        @*<tr>
+                                <td class="meta-head">Customer Name</td>
+                                <td>
+                                    <div class="due"> @Model.CustomerName</div>
+                                </td>
+                            </tr>*@
+                    </table>
+                </div>
+
+            </div>
+
+            @*<div style="clear:both"></div>*@
+
+
+            <table id="items">
+                @if (Model.VoucherItemsViewModels.Count > 0)
+                {
+                    <tr>
+                        <th style="width: 50px">SrNo</th>
+                        <th style="width: 500px">Item</th>
+                        <th style="width: 100px">HSN Code</th>
+                        <th style="width: 100px">Unit Cost</th>
+                        <th style="width: 100px">Quantity</th>
+                        <th style="width: 100px">Price</th>
+                    </tr>
+                    int i = 1;
+                    foreach (var items in Model.VoucherItemsViewModels)
+                    {
+                        if (items.ItemType == "InventoryItem" || items.ItemType == "NonInventoryItem"
+                            || items.ItemType == "Service" || items.ItemType == "Taxation")
+                        {
+                            <tr class="item-row">
+
+
+                                @if (items.ItemType == "Taxation")
+                                {
+                                    <td></td>
+                                    <td class="item-name">
+                                        <div class="delete-wpr">
+                                            <div>@items.Name</div>
+                                            @*<a class="delete" href="javascript:;" title="Remove row">X</a>*@
+                                        </div>
+                                    </td>
+                                    <td class="description"><h5>@items.MRPPerUnit %</h5></td>
+                                    <td>
+                                        <div class="cost"> </div>
+                                    </td>
+                                    <td>
+                                        <div class="qty"> </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>@i</td>
+                                    <td class="item-name">
+                                        <div class="delete-wpr">
+                                            <div>@items.Name</div>
+                                            @*<a class="delete" href="javascript:;" title="Remove row">X</a>*@
+                                        </div>
+                                    </td>
+                                    <td class="description"><h5> @items.ItemTaxCode</h5></td>
+                                    <td>
+                                        <div class="cost"> @items.MRPPerUnit</div>
+                                    </td>
+                                    <td>
+                                        <div class="qty">@items.Quantity</div>
+                                    </td>
+                                }
+
+                                <td><span class="price"><i class="fa fa-rupee"></i> @items.ItemAmount</span></td>
+                            </tr>
+                        }
+                        i++;
+                    }
+                }
+            </table>
+            <br />
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="customer-title solution0" style="float:left">
+                            <img src="~/Content/images/sig_edit_1.png" class="display-block" style="width: 150px;" alt="" />
+                            <h4>Authorized Signature</h4>
+                            @*<div class="display-block" style="width: 150px;">
+                            *@
+                        </div>
+
+                    </div>
+                    <div class="col-xs-8">
+                        <table class="meta">
+                            <tr>
+                                <td class="meta-head">Subtotal #</td>
+                                <td><div><i class="fa fa-rupee"></i>@Model.Subtotal</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Discount</td>
+                                <td><div class="due"><i class="fa fa-rupee"></i> @Model.Discount</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Tax Amount</td>
+                                <td><div class="due"><i class="fa fa-rupee"></i> @Model.TotalTaxAmount</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Total</td>
+                                <td><div class="due"><i class="fa fa-rupee"></i> @Model.Total</div></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div>
+                <br /><br />
+                <br /><br />
+                <br /><br />
+                <div id="terms">
+                    <hr />
+                    <div>
+                        <strong><b>Terms </b> :-</strong>NET @Model.TermsDays Days. Finance Charge of 15% will be made on unpaid balances after @Model.TermsDays days.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <br />
+        <div id="page-wrap">
+
+            @*<div id="header">INVOICE</div>*@
+
+            <div id="identity">
+                <div style="float: left">
+                    <address>
+                        <img alt="T.O.I Management" id="image" src="~/Content/images/FINAL LOGO_small.jpg" class="hidden-xs" />
+                    </address>
+                </div>
+
+                <div id="address">
+                    <address>
+                        <strong>@Model.CompanyName </strong>
+                        <br /> @Model.AddressLine1
+                        <br /> @Model.AddressLine2 , @Model.City
+                        <br />
+                        <abbr title="Phone">Phone :- </abbr> @Model.Mobile
+                        <br />Mail Us :-<a href="mailto:#"> @Model.Email </a>
+                        <br />Website - @Model.Website
+                        <br />GSTIN Number - @Model.RegTaxNumber
+                    </address>
+                </div>
+                <div id="address">
+                    To:-
+                    <address>
+                        <strong>@Model.CustomerName </strong>
+                        <br />@(!string.IsNullOrEmpty(Model.CustomerAddressLine1))
+                        @(!string.IsNullOrEmpty(Model.CustomerAddressLine2))
+                        <br />@(!string.IsNullOrEmpty(Model.CustomerLandMark) ? string.Concat(" , " + Model.CustomerLandMark) : " ")
+                        @(!string.IsNullOrEmpty(Model.CustomerColony) ? Model.CustomerColony : " ")
+                        <br />@Model.CustomerCity - @Model.CustomerZipCode
+                        <br /> <abbr title="Phone">Phone :- </abbr> @Model.CustomerMobile
+                        <br />GSTIN Number - @Model.CustomerGSTIN
+                    </address>
+                </div>
+                <div id="logo">
+                    <div class="pull-right">
+                        <strong>Duplicate</strong>
+                    </div><br />
+                    <table class="meta">
+                        <tr>
+                            <td class="meta-head">Invoice #</td>
+                            <td>
+                                <div>@Model.Invoice</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="meta-head">Date</td>
+                            <td>
+                                <div id="date"> @Html.DisplayFor(modelItem => Model.Date, "ShortDate")</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="meta-head">Pay Meduim</td>
+                            <td>
+                                <div class="due"> Cash</div>
+                            </td>
+                        </tr>
+                        @*<tr>
+                                <td class="meta-head">Amount Due</td>
+                                <td>
+                                    <div class="due"><i class="fa fa-rupee"></i> @Model.AmountDue</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Amount Paid</td>
+                                <td>
+                                    <div class="due"><i class="fa fa-rupee"></i> @Model.AmountPaid</div></td>
+                            </tr>*@
+                        @*<tr>
+                                <td class="meta-head">Customer Name</td>
+                                <td>
+                                    <div class="due"> @Model.CustomerName</div>
+                                </td>
+                            </tr>*@
+                    </table>
+                </div>
+
+            </div>
+
+            @*<div style="clear:both"></div>*@
+
+
+            <table id="items">
+                @if (Model.VoucherItemsViewModels.Count > 0)
+                {
+                    <tr>
+                        <th style="width: 50px">SrNo</th>
+                        <th style="width: 500px">Item</th>
+                        <th style="width: 100px">HSN Code</th>
+                        <th style="width: 100px">Unit Cost</th>
+                        <th style="width: 100px">Quantity</th>
+                        <th style="width: 100px">Price</th>
+                    </tr>
+                    int i = 1;
+                    foreach (var items in Model.VoucherItemsViewModels)
+                    {
+                        if (items.ItemType == "InventoryItem" || items.ItemType == "NonInventoryItem"
+                            || items.ItemType == "Service" || items.ItemType == "Taxation")
+                        {
+                            <tr class="item-row">
+
+
+                                @if (items.ItemType == "Taxation")
+                                {
+                                    <td></td>
+                                    <td class="item-name">
+                                        <div class="delete-wpr">
+                                            <div>@items.Name</div>
+                                            @*<a class="delete" href="javascript:;" title="Remove row">X</a>*@
+                                        </div>
+                                    </td>
+                                    <td class="description"><h5>@items.MRPPerUnit %</h5></td>
+                                    <td>
+                                        <div class="cost"> </div>
+                                    </td>
+                                    <td>
+                                        <div class="qty"> </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>@i</td>
+                                    <td class="item-name">
+                                        <div class="delete-wpr">
+                                            <div>@items.Name</div>
+                                            @*<a class="delete" href="javascript:;" title="Remove row">X</a>*@
+                                        </div>
+                                    </td>
+                                    <td class="description"><h5> @items.ItemTaxCode</h5></td>
+                                    <td>
+                                        <div class="cost"> @items.MRPPerUnit</div>
+                                    </td>
+                                    <td>
+                                        <div class="qty">@items.Quantity</div>
+                                    </td>
+                                }
+
+                                <td><span class="price"><i class="fa fa-rupee"></i> @items.ItemAmount</span></td>
+                            </tr>
+                        }
+                        i++;
+                    }
+                }
+            </table>
+            <br />
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="customer-title solution0" style="float:left">
+                            <img src="~/Content/images/sig_edit_1.png" class="display-block" style="width: 150px;" alt="" />
+                            <h4>Authorized Signature</h4>
+                            @*<div class="display-block" style="width: 150px;">
+                            *@
+                        </div>
+
+                    </div>
+                    <div class="col-xs-8">
+                        <table class="meta">
+                            <tr>
+                                <td class="meta-head">Subtotal #</td>
+                                <td><div><i class="fa fa-rupee"></i>@Model.Subtotal</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Discount</td>
+                                <td><div class="due"><i class="fa fa-rupee"></i> @Model.Discount</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Tax Amount</td>
+                                <td><div class="due"><i class="fa fa-rupee"></i> @Model.TotalTaxAmount</div></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-head">Total</td>
+                                <td><div class="due"><i class="fa fa-rupee"></i> @Model.Total</div></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div>
+                <br /><br />
+                <br /><br />
+                <br /><br />
+                <div id="terms">
+                    <hr />
+                    <div>
+                        <strong><b>Terms </b> :-</strong>NET @Model.TermsDays Days. Finance Charge of 15% will be made on unpaid balances after @Model.TermsDays days.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    //$(function () {
+    //    $('.print').on('click', function () {
+
+
+    //    });
+    //});
+    $(document).ready(function () {
+        var w = window.open();
+        var html = $("#printable").html();
+
+        $(w.document.body).html(html);
+        w.print({
+            stylesheet: "/Content/plugins/EditableInvoice/css/stylecafe.css",
+            stylesheet: "/Content/plugins/EditableInvoice/css/print.css",
+            // resolves after print and restructure the code for better maintainability
+            deferred: $.Deferred(),
+
+            // timeout
+            timeout: 250,
+
+            // Custom title
+            title: null,
+
+            // Custom document type
+            doctype: '<!doctype html>'
+        });
+        //$("#printable").print({
+        //    stylesheet: "/Content/plugins/EditableInvoice/css/style.css",
+        //    stylesheet: "~/Content/plugins/EditableInvoice/css/print.css",
+        //     resolves after print and restructure the code for better maintainability
+        //    deferred: $.Deferred(),
+
+        //     timeout
+        //    timeout: 250,
+
+        //     Custom title
+        //    title: null,
+
+        //     Custom document type
+        //    doctype: '<!doctype html>'
+
+        //});
+    })
+
+</script>

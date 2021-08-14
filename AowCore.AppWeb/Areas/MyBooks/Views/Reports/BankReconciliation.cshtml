@@ -1,0 +1,163 @@
+﻿@model IEnumerable<AowCore.AppWeb.ViewModels.VoucherViewModel>
+
+@{
+    ViewBag.Title = "Bank Reconciliation";
+    Layout = "~/Areas/MyBooks/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Bank Reconciliation</h2>
+
+<hr />
+<table class="table">
+    <tr>
+        <th>
+            <label>Date</label>
+        </th>
+        <th>
+            <label>Voucher</label>
+        </th>
+        <th>
+            <label>Number</label>
+        </th>
+        <th>
+            <label>Ledger</label>
+        </th>
+        <th>
+            <label>Deposit</label>
+        </th>
+        <th>
+            <label>WithDraw</label>
+        </th>
+
+        <th></th>
+    </tr>
+
+
+    @foreach (var voucher in Model)
+    {
+        foreach (var item in voucher.JournalEntryViewModel.OrderBy(x => x.SrNo))
+        {
+
+            if (voucher.VoucherName == "Recipt")
+            {
+                if (item.CrDrType == "Cr")
+                {
+                    <tr>
+                        <td>
+                            @item.VoucherDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreditAmount)
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Recipt", new { id = item.VoucherId }, htmlAttributes: new { @class = "" }) |
+                            @Html.ActionLink("Delete", "Delete", "Recipt", new { id = item.VoucherId }, htmlAttributes: new { @class = "" })
+                        </td>
+                    </tr>
+                }
+
+            }
+            if (voucher.VoucherName == "Payment")
+            {
+                if (item.CrDrType == "Dr")
+                {
+                    <tr>
+                        <td>
+                            @item.VoucherDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountName)
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DebitAmount)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Payment", new { id = item.VoucherId }, htmlAttributes: new { @class = "" }) |
+                            @Html.ActionLink("Delete", "Delete", "Payment", new { id = item.VoucherId }, htmlAttributes: new { @class = "" })
+                        </td>
+                    </tr>
+                }
+
+            }
+            if (voucher.VoucherName == "Contra")
+            {
+                if (item.CrDrType == "Cr")
+                {
+                    <tr>
+                        <td>
+                            @item.VoucherDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreditAmount)
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Contra", new { id = item.VoucherId }, htmlAttributes: new { @class = "" }) |
+                            @Html.ActionLink("Delete", "Delete", "Contra", new { id = item.VoucherId }, htmlAttributes: new { @class = "" })
+                        </td>
+                    </tr>
+                }
+
+            }
+            if (voucher.VoucherName == "Journal Entry")
+            {
+                if (item.CrDrType == "Cr")
+                {
+                    <tr>
+                        <td>
+                            @item.VoucherDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voucher.VoucherNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreditAmount)
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "JournalEntries", new { id = item.VoucherId }, htmlAttributes: new { @class = "" }) |
+                            @Html.ActionLink("Delete", "Delete", "JournalEntries", new { id = item.VoucherId }, htmlAttributes: new { @class = "" })
+                        </td>
+                    </tr>
+                }
+
+            }
+        }
+    }
+</table>
